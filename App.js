@@ -12,10 +12,11 @@ import CreateWeekList from './src/screens/CreateWeekList';
 import { NavigationContainer } from '@react-navigation/native';
 import { PersistGate } from 'redux-persist/integration/react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NativeBaseProvider } from 'native-base';
+import { Icon, NativeBaseProvider } from 'native-base';
 import { Provider } from 'react-redux';
 import { persistor } from './src/store';
-import store  from './src/store';
+import store from './src/store';
+import {Ionicons, MaterialCommunityIcons} from '@native-base/icons'
 import type { Node } from 'react';
 import {
   StyleSheet,
@@ -35,15 +36,26 @@ function MyTabs() {
         headerShown: false,
         tabBarLabelPosition: 'beside-icon',
         tabBarLabelStyle: {
-          color: 'black',
+          color: '#ffff',
         },
-
-
+        tabBarItemStyle: {
+          backgroundColor: '#155e75',
+        }
       }}>
         <Tab.Screen
-
-          name="Summary" component={SummaryScreen} />
-        <Tab.Screen name="CreateWeekList" component={CreateWeekList} />
+          options={{
+            tabBarIcon: ({ color, size }) => {
+              return (<Icon as={MaterialCommunityIcons} color={color ? color : 'amber.100'} name="clipboard-list"  size={size}/>)
+            }
+          }}
+          name="Sumario" component={SummaryScreen} />
+        <Tab.Screen
+           options={{
+            tabBarIcon: ({ color, size }) => {
+              return (<Icon as={MaterialCommunityIcons} name="playlist-edit" color={color} size={size}/>)
+            }
+          }}
+        name="Lista de compras" component={CreateWeekList} />
       </Tab.Navigator>
     </NavigationContainer>
   );
@@ -56,13 +68,13 @@ const App: () => Node = () => {
   };
 
   return (
-    
+
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
 
-      <NativeBaseProvider>
-      <MyTabs />
-    </NativeBaseProvider>
+        <NativeBaseProvider>
+          <MyTabs />
+        </NativeBaseProvider>
       </PersistGate>
     </Provider>
   );
