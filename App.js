@@ -8,7 +8,8 @@
 
 import React from 'react';
 import SummaryScreen from './src/containers/Summary';
-import CreateWeekList from './src/screens/CreateWeekList';
+import CreateWeekList from './src/containers/CreateWeekList';
+import RendicionesScreen from './src/containers/Rendiciones';
 import { NavigationContainer } from '@react-navigation/native';
 import { PersistGate } from 'redux-persist/integration/react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -16,7 +17,7 @@ import { Icon, NativeBaseProvider } from 'native-base';
 import { Provider } from 'react-redux';
 import { persistor } from './src/store';
 import store from './src/store';
-import {Ionicons, MaterialCommunityIcons} from '@native-base/icons'
+import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@native-base/icons'
 import type { Node } from 'react';
 import {
   StyleSheet,
@@ -45,17 +46,24 @@ function MyTabs() {
         <Tab.Screen
           options={{
             tabBarIcon: ({ color, size }) => {
-              return (<Icon as={MaterialCommunityIcons} color={color ? color : 'amber.100'} name="clipboard-list"  size={size}/>)
+              return (<Icon as={MaterialCommunityIcons} color={color ? color : 'amber.100'} name="clipboard-list" size={size} />)
             }
           }}
           name="Sumario" component={SummaryScreen} />
         <Tab.Screen
-           options={{
+          options={{
             tabBarIcon: ({ color, size }) => {
-              return (<Icon as={MaterialCommunityIcons} name="playlist-edit" color={color} size={size}/>)
+              return (<Icon as={MaterialIcons} name="bar-chart" color={color} size={size} />)
             }
           }}
-        name="Lista de compras" component={CreateWeekList} />
+          name="Rendiciones" component={RendicionesScreen} />
+        <Tab.Screen
+          options={{
+            tabBarIcon: ({ color, size }) => {
+              return (<Icon as={AntDesign} name="edit" color={color} size={size} />)
+            }
+          }}
+          name="Compras" component={CreateWeekList} />
       </Tab.Navigator>
     </NavigationContainer>
   );

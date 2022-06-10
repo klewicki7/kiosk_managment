@@ -79,14 +79,14 @@ export default function SummaryScreen(props) {
     <Box bg={'#155e75'}>
       <MovimientosPorDia retiros={props.retiros} gastos={props.gastos} ingresos={props.ingresos} gananciaDiaria={props.gananciaDiaria} />
       <ScrollView>
-        <HistorialMovimientosPorDia recalcular={() => props.recalcular()} listado={props.listaMovimientosPorDia} />
+        <HistorialMovimientosPorDia newMonth={() => props.newMonth()}  newDay={() => props.newDay()} recalcular={() => props.recalcular()} listado={props.listaMovimientosPorDia} />
       </ScrollView>
-      <MyModal />
-      <Box top={'700'} alignSelf={'flex-end'} right={'2'} position={'absolute'} >
+      <Box top={'600'} alignSelf={'flex-end'} right={'4%'} position={'absolute'} >
         <IconButton variant="solid" onPress={() => setModalVisible(true)} borderRadius="full" size="lg" bg="cyan.400" icon={<Icon as={AntDesign} size="6" name="plus" color="warmGray.50" _dark={{
           color: "warmGray.50"
         }} />} />
       </Box>
+      <MyModal />
     </Box>
   )
 }

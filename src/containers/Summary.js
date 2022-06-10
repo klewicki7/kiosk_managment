@@ -15,6 +15,8 @@ const mapDispatchToProps = dispatch => ({
     suma : (payload) => dispatch(actions.exampleRequest(payload)),
     newHistory : (payload) => dispatch(actions.newHistory(payload)),
     recalcular : () => dispatch(actions.recalcular()),
+    newDay : () => dispatch(actions.newDay()),
+    newMonth : () => dispatch(actions.newMonth()),
     
 });
 
