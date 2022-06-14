@@ -1,4 +1,4 @@
-import { SUMA, New_History, RECALCULAR, NEW_DAY, NEW_MONTH } from '../actions/auth';
+import { SUMA, New_History, RECALCULAR_RESPONSE, NEW_DAY, NEW_MONTH, NEW_DAY_RESPONSE, NEW_MONTH_RESPONSE, New_History_RESPONSE } from '../actions/auth';
 import moment from 'moment';
 import 'moment/locale/es';
 moment.locale('es');
@@ -18,7 +18,8 @@ const initialState = {
     ],
     mesActual: '',
     rendicionesSemanales: [
-    ]
+    ],
+    boleta: 0
 
 }
 
@@ -30,99 +31,21 @@ const auth = (state = initialState, action) => {
             return {
                 ...state
             }
-        case New_History:
-            state.listaMovimientosPorDia.push(action.payload[0])
-
-            state.listaMovimientosPorDia = state.listaMovimientosPorDia.sort((a, b) => { return a.hora - b.hora })
-            if (action.payload[0].tipoMovimiento == 'ingreso') {
-                state.ingresos = parseInt(state.ingresos) + parseInt(action.payload[0].monto);
-            } else if (action.payload[0].tipoMovimiento == 'retiro') {
-                state.retiros = parseInt(state.retiros) + parseInt(action.payload[0].monto);
-            } else {
-                state.gastos = parseInt(state.gastos) + parseInt(action.payload[0].monto);
-            }
+        case New_History_RESPONSE:
             return {
-                ...state
+                ...state, listaMovimientosPorDia: action.payload.listaMovimientosPorDia, ingresos: action.payload.ingresosX, retiros: action.payload.retirosX, gastos: action.payload.gastosX, boleta : action.payload.boletaX
             }
-        case RECALCULAR:
-            state.gananciaDiaria = ((parseInt(state.ingresos) * 40) / 100) - parseInt(state.gastos);
+        case RECALCULAR_RESPONSE:
             return {
-                ...state
+                ...state, gananciaDiaria: action.res
             }
-        case NEW_DAY:
-            state.rendicionesSemanales.push({
-                "date": parseInt(moment().format('X')),
-                "data": [
-                    {
-                        "title": "Rendicion semanales",
-                        "ganancias": state.gananciaDiaria,
-                         "ingresos" : state.ingresos,
-                         "retiros" : state.retiros,
-                         "gastos" : state.gastos,
-                        "date": parseInt(moment().format('X'))
-                    }
-                ]
-            })
-
-            state.gananciaDiaria = initialState.gananciaDiaria;
-            state.retiros = initialState.retiros;
-            state.gastos = initialState.gastos;
-            state.ingresos = initialState.ingresos;
-            state.listaMovimientosPorDia = [];
+        case NEW_DAY_RESPONSE:
             return {
-                ...state
+                ...state, gananciaDiaria: 0, retiros: 0, gastos: 0, ingresos: 0, listaMovimientosPorDia: [], rendicionesSemanales: action.res
             }
-        case NEW_MONTH:
-            let gananciaDelMes = 0;
-            let gastosDelMes = 0;
-            let ingresosDelMes = 0;
-            let retirosDelMes = 0;
-            state.rendicionesSemanales.map((item, index) => {
-                gananciaDelMes = (parseInt(gananciaDelMes) + parseInt(item.data[0].ganancias));
-                gastosDelMes = (parseInt(gastosDelMes) + parseInt(item.data[0].gastos));
-                ingresosDelMes = (parseInt(ingresosDelMes) + parseInt(item.data[0].ingresos));
-                retirosDelMes = (parseInt(retirosDelMes) + parseInt(item.data[0].retiros));
-            })
-
-            state.historialGananciaXMes.push({
-                "date": moment().format('X'),
-                "data": [
-                    {
-                        "title": "Rendicion mensuales",
-                        "ganancias": gananciaDelMes,
-                        "boleta" : 30,
-                        "gastos": gastosDelMes,
-                        "retiros": retirosDelMes,
-                        "ingresos" : ingresosDelMes,
-                        "date": moment().format('X')
-                    }
-                ],
-                "history": [...state.rendicionesSemanales]
-            });
-/*             state.listaMovimientosPorDiaMensuales.map(e => {
-                state.rendicionesSemanales.push({
-                    "date": parseInt(moment(e.dia).format('X')),
-                    "data": [
-                        {
-                            "title": "Rendicion semanales",
-                            "ganancias": e.ganancias,
-                             "ingresos" : e.ingresos,
-                             "retiros" : e.retiros,
-                             "gastos" : e.gastos,
-                            "date": parseInt(moment(e.dia).format('X'))
-                        }
-                    ]
-                })
-            }) */
-            state.mesActual = moment().format('MMMM');
-            state.gananciaDiaria = initialState.gananciaDiaria;
-            state.retiros = initialState.retiros;
-            state.gastos = initialState.gastos;
-            state.ingresos = initialState.ingresos;
-            state.listaMovimientosPorDia = initialState.listaMovimientosPorDia;
-            state.rendicionesSemanales = []
+        case NEW_MONTH_RESPONSE:
             return {
-                ...state
+                ...state, gananciaDiaria: 0,boleta : 0, retiros: 0, gastos: 0, ingresos: 0, listaMovimientosPorDia: [], historialGananciaXMes: action.res, rendicionesSemanales: []
             }
         default:
             return state;

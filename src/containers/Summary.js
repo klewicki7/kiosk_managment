@@ -8,7 +8,9 @@ const mapStateToProps = (state) => ({
     ingresos : state.auth.ingresos,
     retiros : state.auth.retiros,
     gastos : state.auth.gastos,
-    gananciaDiaria : state.auth.gananciaDiaria
+    gananciaDiaria : state.auth.gananciaDiaria,
+    listadoSemanal  : state.auth.rendicionesSemanales,
+    boleta : state.auth.boleta
 });
 
 const mapDispatchToProps = dispatch => ({

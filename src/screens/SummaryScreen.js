@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Button, Box, Icon, IconButton, Modal, FormControl, Input, Select, CheckIcon, Center, ScrollView } from 'native-base'
+import { Button, Box, Icon, IconButton, Modal, FormControl, Input, Select, CheckIcon, Center, ScrollView, useToast } from 'native-base'
 import { AntDesign, MaterialCommunityIcons } from '@native-base/icons'
 import MovimientosPorDia from '../components/MovimientosPorDia';
 import HistorialMovimientosPorDia from '../components/HistorialMovimientosPorDia';
@@ -24,6 +24,9 @@ export default function SummaryScreen(props) {
     props.newHistory([{ tipoMovimiento: tipoMovimiento, monto: monto, hora: hora }]);
     setModalVisible(false);
   }
+  const toast = useToast();
+  const id = "test-toast";
+  
 
   function MyModal() {
     return (
@@ -40,9 +43,10 @@ export default function SummaryScreen(props) {
                     bg: "teal.600",
                     endIcon: <CheckIcon size="5" />
                   }} mt={1} >
+                  <Select.Item label="Boleta" value="boleta" />
                   <Select.Item label="Ingreso" value="ingreso" />
-                  <Select.Item label="Retiro" value="retiro" />
                   <Select.Item label="Gasto" value="gasto" />
+                  <Select.Item label="Retiro" value="retiro" />
                 </Select>
               </Box>
             </FormControl >
@@ -77,9 +81,20 @@ export default function SummaryScreen(props) {
 
   return (
     <Box bg={'#155e75'}>
-      <MovimientosPorDia retiros={props.retiros} gastos={props.gastos} ingresos={props.ingresos} gananciaDiaria={props.gananciaDiaria} />
+      <MovimientosPorDia toast={() => {
+        if (!toast.isActive(id)) {
+          toast.show({
+            id,
+            render: () => {
+              return <Box bg="warning.300" px="8" py="5" rounded="sm" mb={5}>
+                      No hay movimientos en el dia de hoy.
+                    </Box>;
+            }
+          })
+        }
+      }} listadoSemanal={props.listadoSemanal} listado={props.listaMovimientosPorDia} boleta={props.boleta} newMonth={() => props.newMonth()} newDay={() => props.newDay()} retiros={props.retiros} gastos={props.gastos} ingresos={props.ingresos} gananciaDiaria={props.gananciaDiaria} />
       <ScrollView>
-        <HistorialMovimientosPorDia newMonth={() => props.newMonth()}  newDay={() => props.newDay()} recalcular={() => props.recalcular()} listado={props.listaMovimientosPorDia} />
+        <HistorialMovimientosPorDia listado={props.listaMovimientosPorDia} />
       </ScrollView>
       <Box top={'600'} alignSelf={'flex-end'} right={'4%'} position={'absolute'} >
         <IconButton variant="solid" onPress={() => setModalVisible(true)} borderRadius="full" size="lg" bg="cyan.400" icon={<Icon as={AntDesign} size="6" name="plus" color="warmGray.50" _dark={{

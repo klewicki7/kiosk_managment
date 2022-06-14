@@ -6,14 +6,35 @@ import Timeline from "react-native-beautiful-timeline";
 function RendicionesScreen(props) {
     const [rendicionesSemanales, setRendicionesSemanales] = React.useState(props.rendicionesSemanales)
     const [rendicionesMensuales, setRendicionesMensuales] = React.useState(props.gananciaPorMes)
-    const [rendiciones, setRendiciones] = React.useState(rendicionesSemanales)
+    const [rendiciones, setRendiciones] = React.useState(rendicionesSemanales?.length > 0 ? rendicionesSemanales : rendicionesMensuales)
     const [actual, setActual] = React.useState(1)
+
     useEffect(() => {
         setRendicionesSemanales(props.rendicionesSemanales)
-        console.log(rendicionesSemanales)
+        if (rendicionesSemanales?.length > 0) {
+            setRendiciones(rendicionesSemanales)
+            setActual(1)
+        } else if (rendicionesMensuales?.length > 0) {
+            setRendiciones(rendicionesMensuales)
+            setActual(2)
+        } else {
+            setRendiciones([])
+            setActual(0)
+        }
     }, [rendicionesSemanales])
+
     useEffect(() => {
         setRendicionesMensuales(props.gananciaPorMes)
+        if (rendicionesSemanales?.length > 0) {
+            setRendiciones(rendicionesSemanales)
+            setActual(1)
+        } else if (rendicionesMensuales?.length > 0) {
+            setRendiciones(rendicionesMensuales)
+            setActual(2)
+        } else {
+            setRendiciones([])
+            setActual(0)
+        }
     }, [rendicionesMensuales])
 
 
@@ -45,21 +66,14 @@ function RendicionesScreen(props) {
                 </Box>
             </Stack>
             {
-                rendicionesSemanales.length === 0 && actual === 1 &&
-                <Center mt={'50%'}  paddingBottom={'100%'}>
-                    <Text fontSize={'2xl'} color={'white'} >No hay rendiciones semanales.</Text>
+                rendiciones.length == 0 && <Center mt={'50%'} paddingBottom={'200%'}>
+                    <Text fontSize={'2xl'} color={'white'} >No hay rendiciones.</Text>
                 </Center>
-            }
+          }
             {
-                rendicionesMensuales.length === 0 && actual === 2 &&
-                <Center mt={'50%'} paddingBottom={'100%'}>
-                    <Text fontSize={'2xl'} color={'white'} >No hay rendiciones mensuales.</Text>
-                </Center>
-            }
-            {
-                rendicionesSemanales.length > 0 || rendicionesMensuales.length > 0 &&
-                    <Timeline backgroundColor='#155e75' data={rendiciones} actual={actual} />
-                    
+                rendiciones.length > 0 && actual != 0 ? <Timeline backgroundColor='#155e75' data={rendiciones} actual={actual} />
+                    : <Box />
+
             }
         </VStack>
     )

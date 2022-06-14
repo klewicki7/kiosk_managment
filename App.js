@@ -47,21 +47,21 @@ function MyTabs() {
           options={{
             tabBarIcon: ({ color, size }) => {
               return (<Icon as={MaterialCommunityIcons} color={color ? color : 'amber.100'} name="clipboard-list" size={size} />)
-            }
+            }, unmountOnBlur: true
           }}
           name="Sumario" component={SummaryScreen} />
         <Tab.Screen
           options={{
             tabBarIcon: ({ color, size }) => {
               return (<Icon as={MaterialIcons} name="bar-chart" color={color} size={size} />)
-            }
+            },unmountOnBlur: true
           }}
           name="Rendiciones" component={RendicionesScreen} />
         <Tab.Screen
           options={{
             tabBarIcon: ({ color, size }) => {
               return (<Icon as={AntDesign} name="edit" color={color} size={size} />)
-            }
+            },unmountOnBlur: true
           }}
           name="Compras" component={CreateWeekList} />
       </Tab.Navigator>
